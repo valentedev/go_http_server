@@ -1,44 +1,21 @@
 # HTTP Server created in Go
 
-For every web based application we create there is always the need for a HTTP server to receive and respond calls from clients. In this post we are going to create a basic server written in Go that should be production ready, highly configurable, ready to hook databases and much more. 
+For every web based application we create there is always the need for a HTTP server to receive and respond calls from clients. It should be reusable, production-ready and highly configurable.
 
-First of all let's create a folder for our project.
+`flags` are a great resource to easily configure port, enviroments, server behavior, etc, when starting the server.
 
-> `$ mkdir httpserver-go`
+If you are working in API server you should probably prefix the `version` number in your url path like so: api.com/**v1.0.0**/home. An alternative way is to include it on the headers like `Accept: app/appName-v1`
 
-Since this is a Go project we should init our mod file. My preference is to use 'repository/username/filename' as the mod path as you can see below. 
-
-> `$ cd httpserver-go`
-
-> `$ go mod init github/valentedev/httpserver-go`
-
-Now we can create the directory structure of our application that should look like this:
+In this project we could use the standard http.ServeMux but I prefer to implement the [httprouter](https://github.com/julienschmidt/httprouter). It is well tested, reliable and fast. It keeps our `main()` clean and works better for running tests. As you can see below, we update our server's Handler to call app.routes() instead of `http.NewServerMux()`
 
 ```
-- bin  
-- cmd
-  - app
-        main.go
-- go.mod
-- Makefile
+srv := &http.Server{
+		Addr:         fmt.Sprintf(":%d", cfg.port),
+		Handler:      app.routes(),
+		IdleTimeout:  time.Minute,
+		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 30 * time.Second,
+	}
 ```
 
-> `mkdir -p bin cmd/app`
-
-> `touch Makefile cmd/app/main.go`
-
-Now let's check our app is working by adding some code to `main.go` file
-
-```
-package main
-
-import "fmt"
-
-func main() {
-	fmt.Println("Hello world!")
-}
-```
-> `$ go run ./cmd/app`
-
-We should have "Hello world!" printed in our terminal. Great! Now we can move on and start writting our http server.
 
