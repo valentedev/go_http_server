@@ -31,7 +31,7 @@ func main() {
 		logger: logger,
 	}
 
-	logger.Printf("starting %s server on %d", cfg.env, cfg.port)
+	logger.Printf("%s server started on port %d", cfg.env, cfg.port)
 
 	err := app.serve()
 	if err != nil {

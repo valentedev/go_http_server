@@ -38,13 +38,29 @@ go func() {
 		signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 		s := <-quit
 		app.logger.Println("shutting down server\n", s.String())
-		//os.Exit(0)
 
 		ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 		defer cancel()
 
 		shutdownError <- srv.Shutdown(ctx)
 	}()
+```
+
+An **audit** system to check, test, update and format our code base just by running a `make audit` command. 
+
+```
+.PHONY: audit
+audit:
+	@echo 'Tidying and verifying module dependencies...'
+	go mod tidy
+	go mod verify
+	@echo 'Formatting code...'
+	go fmt ./...
+	@echo 'Vetting code...'
+	go vet ./...
+	staticcheck ./...
+	@echo 'Running tests...'
+	go test -race -vet=off ./...
 ```
 
 
