@@ -63,7 +63,7 @@ audit:
 	go test -race -vet=off ./...
 ```
 
-To protect our server from receiving too many request from clients is a good idea to setup **rate limiting** control. This functionality is implemented as a `middleware` so we can appli it on all routes. 
+To protect our server from receiving too many request from clients is a good idea to setup **rate limiting** control. This functionality is implemented as a `middleware` so we can apply it on all routes. 
 
 
 
