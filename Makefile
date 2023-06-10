@@ -29,3 +29,17 @@ build/app:
 	@echo 'Building cmd/api...'
 	go build -ldflags="-s" -o=./bin/app ./cmd/app
 	GOOS=linux GOARCH=amd64 go build -ldflags="-s" -o=./bin/linux_amd64/app ./cmd/app
+
+.PHONY: migrate/up
+migrate/up: 
+	migrate -path=./migrations -database=$$FIO_DB_DSN up
+
+.PHONY: migrate/down
+migrate/down: 
+	migrate -path=./migrations -database=$$FIO_DB_DSN down
+
+.PHONY: migrate/version
+migrate/version: 
+	migrate -path=./migrations -database=$$FIO_DB_DSN version
+
+# migrate create -seq -ext=.sql -dir=./migrations create_blablabla

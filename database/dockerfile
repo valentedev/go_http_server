@@ -1,0 +1,7 @@
+FROM postgres:13
+
+ENV POSTGRES_USER=basicadmin
+ENV POSTGRES_PASSWORD=basicpass
+ENV POSTGRES_DB=basic
+
+EXPOSE 5432
