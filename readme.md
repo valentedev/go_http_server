@@ -1,9 +1,9 @@
 # HTTP Server created in Go
 
-For every web based application we create there is always the need for a HTTP server to receive and respond calls from clients. It should be reusable, production-ready and highly configurable. 
+For every web based application we create there is always the need for a HTTP server to receive and respond calls from clients. It should be reusable, production-ready and highly configurable.
 
 **Flags**
-easily configure port, environments, and many others server functionalities. Here you have one example of how to use flags to define a list of Trusted Origins in a CORS situation. 
+easily configure port, environments, and many others server functionalities. Here you have one example of how to use flags to define a list of Trusted Origins in a CORS situation.
 
 ```
 flag.Func("cors-trusted-origins", "Trusted CORS origins (space separated)", func(val string) error {
@@ -21,12 +21,11 @@ If you are working in API server, you should probably prefix the version number 
 
 **Graceful shutdown**
 
-To safely shutdown our app we need to allow our handlers to finish their job through a graceful shutdown functionality. By using `os.Signal` we will catch signals like `SIGINT`, `SIGTERM` or `SIGKILL`. We use a buffed channel with size 1 to avoid missing any signals. 
+To safely shutdown our app we need to allow our handlers to finish their job through a graceful shutdown functionality. By using `os.Signal` we will catch signals like `SIGINT`, `SIGTERM` or `SIGKILL`. We use a buffed channel with size 1 to avoid missing any signals.
 
 `quit := make(chan os.Signal, 1)`
 
-
-We create another channel to receive the HTTP server method `Shutdown()` with a configurable TimeOut context. 
+We create another channel to receive the HTTP server method `Shutdown()` with a configurable TimeOut context.
 
 `shutdownError := make(chan error)`
 
@@ -40,9 +39,9 @@ Will assist you to check, test, update and format our code base just by running 
 
 **Rate limiting**
 
-To protect our server from receiving too many requests from clients is a good idea to setup rate limiting control. This functionality is implemented as a `middleware` so we can apply it on all routes. 
+To protect our server from receiving too many requests from clients is a good idea to setup rate limiting control. This functionality is implemented as a `middleware` so we can apply it on all routes.
 
-First, we use `"github.com/tomasen/realip"` to grab the ip in the Request call `ip := realip.FromRequest(r)`. This ip number will stored as a string in the index of a map called "clients" `clients = make(map[string]*client)`. In this case, "client" is a struct that has a LIMITER (`"golang.org/x/time/rate"`) and LASTSEEN (time.Time) fields. 
+First, we use `"github.com/tomasen/realip"` to grab the ip in the Request call `ip := realip.FromRequest(r)`. This ip number will stored as a string in the index of a map called "clients" `clients = make(map[string]*client)`. In this case, "client" is a struct that has a LIMITER (`"golang.org/x/time/rate"`) and LASTSEEN (time.Time) fields.
 
 ```go
 type client struct {
@@ -51,10 +50,16 @@ type client struct {
 }
 ```
 
-The client.limiter has a method `Allow()` that returns a bool that will control the request by releasing the request or returning a 429 error. 
+The client.limiter has a method `Allow()` that returns a bool that will control the request by releasing the request or returning a 429 error.
 
 **Panic recover**
 
-We create a middleware that check if there is a `panic` by using the built in `recover()` that will release the request to the next handler or throw an 500 error. 
+We create a middleware that check if there is a `panic` by using the built in `recover()` that will release the request to the next handler or throw an 500 error.
+
+**Database Connection**
+
+You will find a github Branch called `with_db` with the implementation of a DB connection. On folder database, there is a Dockerfile that runs a Postgres server and a readme file of how to create the image and run the container.
+
+In the root folder you will find a Migrations folder that can be used with the Migrate commands found in the Makefile.
 
 Check the code on [go_http_server](https://github.com/valentedev/go_http_server) Github repository.
