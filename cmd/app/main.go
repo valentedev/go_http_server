@@ -73,9 +73,11 @@ func main() {
 	app := &application{
 		config: cfg,
 		logger: logger,
+		models: data.NewModels(db),
 	}
 
 	logger.Printf("%s server started on port %d", cfg.env, cfg.port)
+	logger.Printf("database connection pool established")
 
 	err = app.serve()
 	if err != nil {

@@ -9,3 +9,16 @@ docker exec -it basic-ctr bash
 
 Once inside the container, enter the USER and DATABASE provided on dockerfile
 psql -U basicadmin -d basic
+
+CREATE TABLE users (
+   id SERIAL PRIMARY KEY,
+   name VARCHAR(50)
+);
+
+INSERT INTO users (name)
+VALUES ('Bruce Wayne');
+
+INSERT INTO users (name)
+VALUES ('Clark Kent');
+
+DROP TABLE users;

@@ -32,14 +32,14 @@ build/app:
 
 .PHONY: migrate/up
 migrate/up: 
-	migrate -path=./migrations -database=$$FIO_DB_DSN up
+	migrate -path=./migrations -database=$$BASIC_DB_DSN up
 
 .PHONY: migrate/down
 migrate/down: 
-	migrate -path=./migrations -database=$$FIO_DB_DSN down
+	migrate -path=./migrations -database=$$BASIC_DB_DSN down
 
 .PHONY: migrate/version
 migrate/version: 
-	migrate -path=./migrations -database=$$FIO_DB_DSN version
+	migrate -path=./migrations -database=$$BASIC_DB_DSN version
 
 # migrate create -seq -ext=.sql -dir=./migrations create_blablabla
