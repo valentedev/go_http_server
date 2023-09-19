@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"flag"
 	"github/valentedev/httpserver-go/internal/data"
-	"log"
+	"log/slog"
 	"os"
 	"strings"
 	"time"
@@ -36,7 +36,7 @@ type config struct {
 
 type application struct {
 	config config
-	logger *log.Logger
+	logger *slog.Logger
 	models data.Models
 }
 
@@ -61,11 +61,12 @@ func main() {
 
 	flag.Parse()
 
-	logger := log.New(os.Stdout, "", log.Ldate|log.Ltime)
+	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
 
 	db, err := openDB(cfg)
 	if err != nil {
-		logger.Fatal(err)
+		logger.Error(err.Error())
+		os.Exit(1)
 	}
 
 	defer db.Close()
@@ -76,12 +77,13 @@ func main() {
 		models: data.NewModels(db),
 	}
 
-	logger.Printf("%s server started on port %d", cfg.env, cfg.port)
-	logger.Printf("database connection pool established")
+	// logger.Printf("%s server started on port %d", cfg.env, cfg.port)
+	// logger.Printf("database connection pool established")
 
 	err = app.serve()
 	if err != nil {
-		logger.Fatal(err, nil)
+		logger.Error(err.Error())
+		os.Exit(1)
 	}
 
 }

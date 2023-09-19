@@ -26,7 +26,7 @@ func (app *application) serve() error {
 		quit := make(chan os.Signal, 1)
 		signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 		s := <-quit
-		app.logger.Println("shutting down server\n", s.String())
+		app.logger.Info("caught signal", "signal", s.String())
 
 		ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 		defer cancel()
@@ -44,7 +44,7 @@ func (app *application) serve() error {
 		return err
 	}
 
-	app.logger.Println("stopped server", srv.Addr)
+	app.logger.Info("stopped server", "addr", srv.Addr)
 
 	return nil
 }
